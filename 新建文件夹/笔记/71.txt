@@ -1,0 +1,219 @@
+数据库配置方法：
+		1、sql 语句配置数据库
+
+		2、ORM语法配置
+
+
+博客系统项目：
+
+
+1、设计表
+
+2、基于ajax登录、基于form组件的注册
+
+3、系统首页设计
+
+4、个人站点设计
+
+5、文章详细页（点赞与踩灭，ajax提交评论，显示评论）
+	
+	1）评论楼
+
+	2）评论数
+
+6、后台管理页面（kindediter，BS模块）
+
+编辑框--发送的都是html标签
+
+标签字符串：“ <p>内容</p>”，用beautifulsoup匹配标签字符串内容，不用正则。
+
+
+ORM 跨表查询
+
+	class Book(models.Model):
+
+		title = models.CharField(max_length=32)
+
+		publish = models.ForeignKey(to="Publish",to_field="id",on_delete=models.CASCADE)
+
+		authors = models.ManyToManyField(to = "Author",related_name='bookList')
+
+	class Publish(models.Model):
+
+		name = models.CharField(max_length=32)
+
+	class Author(models.Model):
+
+
+		name = models.CharField(max_length=32)
+
+		ad = models.OneToOneField("AuthorDetail",on_delete=models.CASCADE)
+
+	class AuthorDetail(models.Model):
+
+		telephone = models.BigIntegerField()
+
+
+		
+
+
+
+
+	
+	基于对象查询（sql：子查询）：
+
+		一对多、(Publish--Book)
+
+			正向查询,按字段：
+		
+			查询python这本书的出版社所在名称
+
+			book_obj = Book.objects.filter(title="python").first()
+
+			print(book_obj.publish.name)
+
+			反向查询，按表明小写_set：
+
+			人民出版社出版过的所有书籍名称
+
+			publish_obj = Publish.objects.filter(name="人民出版社出版").first()
+
+			print(publish_obj.book_set.all())
+
+			for obj in publish_obj.book_set.all():
+
+				print(obj.title)	书名逐一显示
+			
+
+		
+
+		多对多、
+			正向查询,按字段：
+
+			python这本书所有作者的名字
+
+			book_obj = Book.objects.filter(title="python").first()
+
+			book_obj.authors.all()
+
+			反向查询，按表明小写_set：
+
+			alex出版过的所有书籍名称
+
+			alex = Author.objects.filter(name="alex").first()
+
+			方法一：alex.book_set.all()
+
+			方法二（这是设置related_name='bookList'方法）：alex.bookList.all()
+	
+
+		一对一、
+			正向查询,按字段：			
+
+			查询alex的手机号
+
+			alex = Author.objects.filter(name="alex").first()
+
+			alex.ad.telephone
+
+			反向查询，按表明小写：
+
+			以151开头的手机号的作者的名字
+
+			ad = AuthorDetail.objects.get(telephone__startswith="151")
+
+			ad.authour.name
+
+
+			
+
+
+
+
+
+	基于Queryset和__（sql：join语句）:
+
+			正向查询，按字段
+
+			反向查询，按表明小写
+
+
+			一对多、(Publish--Book)
+
+			正向查询,按字段：
+		
+			查询python这本书的出版社所在名称
+
+			Book.objects.filter(title="python").values("publish__name")
+
+			for obj in Book.objects.filter(title="python"):
+
+				temp={}
+
+				temp["publish__name"] = obj.publish.name
+
+
+			反向查询，按表明小写：
+
+			人民出版社出版过的所有书籍名称
+
+			Publish.objects.filter(name="人民出版社出版").values("book__title")
+
+
+
+
+
+			多对多、
+
+			python这本书所有作者的名字
+
+			Book.objects.filter(title="python").values("authors__name")
+
+
+
+			alex出版过的所有书籍名称
+
+			Author.objects.filter(name="alex").values("book__title")
+	
+
+		一对一、
+			正向查询,按字段：			
+
+			查询alex的手机号
+
+			 Author.objects.filter(name="alex").values("ad__telephone")
+
+	
+
+			以151开头的手机号的作者的名字
+
+			AuthorDetail.objects.filter(telephone__startswith="151").values("author__name")
+
+	
+	拓展：
+		联系1:
+		查询python这本书的出版社所在名称
+
+		Book.objects.filter(title="python").values("publish__name")
+
+		Publish.objects.filter(book__title="python").values("name")
+
+		联系2：
+			以151开头的手机号的作者的名字
+
+			AuthorDetail.objects.filter(telephone__startswith="151").values("author__name")
+
+			Book.objects.filter(authors__ad__telephone__startswith="151").values("title","publish__name")
+
+
+
+	分组查询：
+
+		查询每一个出版社出过的书籍
+
+
+		models.Publish.objects.annotate(Count("book__id"))
+
+		select count(*) from publish group by id	
+
+

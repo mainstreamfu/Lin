@@ -1,0 +1,174 @@
+系统首页的文章渲染
+		方式1
+		Book.objects.create(title="python",publish_id=2)
+
+		方式2
+		publish_obj = Publish.objects.filter(id=2).first()
+		Book.objects.create(title="python",publish_id=publish_obj)
+
+个人站点：
+
+		日期归档
+
+		sql：
+
+		select create_time,Count(*) from Article group by create_time;
+
+
+
+
+
+个人站点：
+
+       
+     
+		日期归档：
+             
+			mysql:
+          
+				select create_time,Count(*) from Article group by create_time
+            
+       
+
+				select data_format(dt,"%%Y-%%m")  from t1 ;
+       
+    
+	
+			sqlite:
+        
+          
+
+				select strftime('%%Y-%%m-%%d',create_time)  from t1
+       
+       
+     
+				
+			为什么 使用extra？
+
+				django无法查询复杂的where字句
+
+			        eg：
+				sql：select * from book where readnum > pollnum
+    
+    
+				ORM：Book.objects.filter(readnum__gt=F("pollnum"))
+ 			
+
+			extra:
+  
+
+				Book.objects.all().extra(select={"is_recent":"create_time">"2019-01-01"})
+ 
+
+      
+          			extra的格式：一个键，一个sql语句。布尔值0，1返给"is_recent"
+
+				eg2：
+				sqlite写法：
+				Article.objects
+				.filter(nid=1)
+				.extra(select={"standard_time":"strftime('%%Y-%%m-%%d',create_time)"})
+				.values("standard_time","nid","title")    
+    
+
+				mysqle写法：
+				Article.objects
+
+				.filter(nid=1)　　　　　　　　　　　　　　
+				.extra(select={"standard_time":"data_format(create_time,'%%Y-%%m-%%d',)"})
+　　　　　　　　　　　　　　
+				.values("standard_time","nid","title")         
+    
+    
+
+***********************************************************************************************************************************************************************
+				Book.objects.all().extra(select={"is_recent":"create_time">"2019-01-01"})
+ 
+
+      
+          
+				queryResult=models.Article.objects.extra(select={'is_recent': "create_time > '2017-09-05'"})
+    
+    
+				article_obj=models.Article.objects
+　　　　　　　　　　　　　　
+				.extra(select={"standard_time":"strftime('%%Y-%%m-%%d',create_time)"})
+　　　　　　　　　　　　　　
+				.values("standard_time","nid","title")
+
+
+
+
+
+
+
+
+
+############################################分组查寻2
+
+	ret = Publish.objects.all().annotate(c=Count("book__id")).values("name","c")
+
+基于对象的查询（子查询）
+
+一对多：
+				正向查询按字段：publish
+			Book---——————------------->Publish
+				<-----------
+				表明小写_set
+
+多对多：
+
+				正向查询按字段字段：authors
+			Book-------------------------------->Author
+				<-----------
+				表明小写_set
+
+一对一：
+				正向查询按字段字段：ad
+			Author-------------------------->AuthorDetail
+				<-----------
+				表明小写
+
+				
+基于Queryset查询（jion查询）
+
+			正向查询，按字段
+
+			反向查询，按表明小写
+
+			一对多：
+
+
+
+
+
+
+Book.objects.values("字段").annotate()  #group  by 字段
+
+    #统计每一个出版社的最便宜的书
+    #方式1
+    # obj = Publish.objects.all().annotate(minPrice=Min("book__price")).values("minPrice")
+    # print(obj)
+    #方式2
+    # select
+    ret = Book.objects.values("publish_id").annotate(min_price=Min("price")).values("min_price")
+    print(ret)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

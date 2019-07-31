@@ -1,0 +1,9 @@
+def teacher(request):
+	teacher_list = models.Teacher.objects.all()
+	return render(request,'teacher_list.html',{'teacher_list':teacher_list})
+
+
+def delete_teacher(request):
+
+	tid = request.GET.get('teacher_list/')
+	models.Teacher

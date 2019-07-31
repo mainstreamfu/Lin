@@ -1,0 +1,60 @@
+跨域：（跨域一般是不允许的 浏览器会自动做拦截）
+
+	1、同源：域名、协议、端口相同的情况
+
+
+	2、同源策略
+
+	3、JSONP    JSONP一定是GET请求
+
+	jsonp 'callbacks'就是定义一个存放回调函数的键，jsonpcallback是前端定义好回调函数方法名‘SayHi’，server端接受callback键对应值后就可以在其中填充数据打包返回了；
+
+jsonpcallback参数可以不定义，jQuery会自动定义一个随机名发过去。
+
+
+		    function SayHi(s){
+            console.log(s)
+    }
+
+    $(".b1").click(function () {
+
+        $.ajax({
+            url:"http://127.0.0.1:8002/ajax_send/",
+            dataType:'jsonp',
+            jsonp:'callback',
+            jsonpCallback:"SayHi",
+
+        })
+
+    })
+
+
+		if dataType=="jsonp":
+
+		发送模拟script请求：url:'http://127.0.0.1:8002/ajax_send/?callback',
+
+		
+		else:
+
+			原生Ajax请求
+
+			xml = xmlhttprequest（）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

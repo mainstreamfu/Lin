@@ -1,0 +1,38 @@
+3.media配置：
+
+	静态文件：static： css  JS img font
+
+	用户上传文件： media ：   avatar  file等
+
+		针对FileField，ImageField字段：
+
+		avatar = models.FileField(upload_to = 'avatars/',default="/avatar/default.png")
+
+		 默认会将FileField字段中的upload_to参数对应的值avatar文件下载到项目根目录下
+
+		如果 在settings中配置了一句：
+
+					MEDIA_URL="/media/"
+					MEDIA_ROOT=os.path.join(BASE_DIR,"app01","media") 
+
+
+					将FileField字段中的upload_to参数对应的值avatar下载到MEDIA_ROOT路径下
+
+
+##################################################################################################################
+
+
+使用media：
+
+		settings.py 
+				MEDIA_URL="/media/"
+				MEDIA_ROOT=os.path.join(BASE_DIR,"app01","media")
+
+
+		urls.py
+			from django.views.static import serve
+			from s1_cnblog import settings
+
+			re_path('media/(?P<path>.*)',serve,{'document_root':settings.MEDIA_ROOT})
+
+系统首页的文章渲染

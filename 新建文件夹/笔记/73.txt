@@ -1,0 +1,41 @@
+admin 添加数据并渲染主页
+
+首先在admin.py中引入models
+	from .models import *
+
+第二步
+admin.site.register(UserInfo)	UserInfo这个是models中的类名	
+admin.site.register(Blog)
+admin.site.register(Tag)
+
+
+
+文件上传：
+
+	form请求：
+
+		1、obj = request.FILES.get("f")        #得到一个对象
+
+		2、<form action="" method="post" enctype="multipart/form-data">
+
+	ajax请求：
+
+		1、首先实例化配置一个formdata对象；
+			然后一组一组键值对加入formdata；
+				（本次例子有三组键值对，以后以实际为主）
+
+					 formdata.append("pwd",$("#pwd").val());键和值以逗号分隔
+
+
+		2、在ajax中formdata作为data的值
+				url:"/put_ajax/",
+             			type:"post",
+            			data:formdata,
+
+			用 contentType:false,processData:false,这两个参数同时指定为false，至此整个过程结束
+
+
+
+
+		********总结：我们利用一个formdata加两个参数（contentType:false,processData:false,）解决了ajax上传文件的问题（这个要记住）
+			

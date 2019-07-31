@@ -1,0 +1,30 @@
+js里渲染一个变量要加引号，
+
+“{{request.user.username}}”
+
+js中if与Python有差别
+js中做if判断变量需要加引号：
+
+
+		if （“{{request.user.username}}”）
+
+
+Article.objects.filter(nid=article_id).update(up_count=F("up_count")+1)  取出变量加一
+
+
+
+
+
+is_up = json.loads(request.POST.get("is_up")) 转化Python格式
+
+
+
+
+
+render 评论楼内子评论
+
+ajax实现评论显示
+
+
+bootstrip中well加间隙
+

@@ -1,0 +1,147 @@
+﻿爬虫
+
+今日内容
+
+1.爬虫介绍
+
+2.爬取汽车之家新闻
+
+3.requests
+
+4.bs4
+
+掌握了requests和bs4这两个脚本之后，如果不考虑验证码和性能，
+基本网页都能爬取。
+以后实际工作中，基本这两个脚本外加scrapy框架就可以了。
+
+
+一、爬虫介绍
+	1.什么是爬虫？
+		编写程序，根据URL获取网站信息。
+		历史背景：2015起，我国对数据爬取进行了立法。
+	2.爬取汽车之家新闻
+		a.伪造浏览器向某个地址发送HTTP请求，
+		获取返回的字符串。
+		
+		ret = requests.get(url='https://www.autohome.com.cn/news/')
+		ret.encoding = ret.apparent_encoding
+		print(ret.text)
+
+		注:ret是一个对象
+		requests是伪造浏览器的行为
+		ret.encoding = ret.apparent_encoding
+		是测数据类型（转换成中文）
+		
+		ret.content 按照字节显示
+		ret.text 按照字符串显示
+		
+		**不到万不得已避免使用正则表达式。
+		使用bs4就能完成HTML解析，解析之后变成一个对象。
+		
+		b.解析：获取我们想要的指定的内容
+		BeautifulSoup
+			BeautifulSoup帮我们把字符串做切割，
+			把每个标签切割成一个对象。
+		
+		bs4解析HTML格式的字符串：
+		div = soup.find(name='标签名')
+		div = soup.find(name='标签名',id='user')
+		div = soup.find(name='标签名',_class="page-one")
+		div = soup.find(name='div',attrs={id:'user','class':'page-one'})
+		
+		div.text 获取标签的文本
+		div.attrs 获取标签的属性
+		div.get('src')  获取标签属性的值
+
+		li_list = soup.find_all(name='标签名')
+		li_list = soup.find_all(name='标签名',id='user')
+		li_list = soup.find_all(name='标签名',_class="page-one")
+		li_list = soup.find_all(name='li',attrs={id:'user','class':'page-one'})
+				
+		li_list 是列表
+		如果要查找具体li_list列表中的值，必须用下标索引查找
+		li_list[0]
+
+======================================================================================================================================
+requests模块
+
+method:
+url:
+params:
+data:
+json:
+headers:
+cookies:
+proxies:封ip，用代理
+
+
+
+files: 上传文件
+   
+auth: 基本认证
+   
+timeout: 超时时间
+  	***响应时最多等待多少秒 
+allow_redirects: True	***是否允许重定向 
+   
+stream: 下载大文件时
+    
+ret = requests.get('http://127.0.0.1:8000/test/', stream=True)
+    
+for i in r.iter_content():
+  	   
+# print(i)
+    
+from contextlib import closing
+    
+with closing(requests.get('http://httpbin.org/get', stream=True)) as r:
+     
+# 在此处理响应。
+     
+for i in r.iter_content():
+      
+print(i)
+
+
+cert:证书
+verify:确认
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ # 发送文件，定制文件名
+    # file_dict = {
+    #     'f1': ('test.txt', "hahsfaksfa9kasdjflaksdjf", 'application/text', {'k1': '0'})		自定义请求头
+    # }
+    # requests.request(method='POST',
+    #                  url='http://127.0.0.1:8000/test/',
+    #                  files=file_dict)
+
+
+		
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+

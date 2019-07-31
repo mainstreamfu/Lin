@@ -1,0 +1,58 @@
+**********
+在setting中设置USE_TZ = False才能使用__month 和 __day
+
+USE_TZ = False          #false后才能用__month
+
+
+
+文章详细页：
+
+
+		url设计
+		母版继承
+		自定义标签：@regiter.filter:{{var|filter_name:参数}}  
+
+			    @register.simple_tag{%tag_name 参数1 参数2 %}
+
+			    @register.inclusion_tag
+
+
+			文章详细页内容显示（转义）
+
+
+    #文章详细页步骤归纳：
+            1、先匹配正则表达式
+    		re_path('(?P<username>\w+)/articles/(?P<article_id>\d+)\.html',views.article_detail),
+
+	    2、写视图函数：
+
+	    3、渲染页面article_detail要继承article_base
+
+	    4、在home _base放一个自定义标签函数{% get_archive_style username %}	
+
+
+		点赞：
+			点赞用户user就是当前登录用户 request.user	
+
+			评论人也是当前登录用户 request.user
+
+
+
+
+	response = {"state":True}
+    try:正常执行下面操作
+        with transaction.atomic():#事务处理
+		谁在出错都会回归到原先的原点上去
+            obj = ArticleUpDown.objects.create(user_id=user_id,article_id=article_id)
+            Article.objects.filter(pk=article_id).update(up_count=F("up_count")+1)
+    except Exception as e：
+	抛出异常
+        response["state"]=False   提醒ajax有重复点赞了
+
+
+
+
+
+
+
+
