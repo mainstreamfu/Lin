@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/backend_index.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="title">{{ username }}</div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="/app01/{{ request.user.username }}/backend_add_article">添加文章</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="">分类管理</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="">标签操作</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="con">
+                    <table class="table able-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>文章标题</th>
+                                <th>操作</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for article in article_list %}
+                                <tr>
+                                    <th>{{ article.title }}</th>
+                                    <th><a href="">编辑</a></th>
+                                    <th><a href="">删除</a></th>
+                                </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
